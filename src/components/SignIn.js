@@ -41,7 +41,7 @@ const SignIn = () => {
   }
 
   return (
-    <div className='flex flex-col overflow-auto h-fit bg-gradient-to-r'>
+    <div className='flex flex-col overflow-auto bg-slate-950 h-fit bg-gradient-to-r'>
       {isLoading ? (
         <Loader />
       ) : (

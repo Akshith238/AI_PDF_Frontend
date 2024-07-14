@@ -1,24 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Fab, Tooltip, Typography, Card, CardContent } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { Doughnut, Line } from 'react-chartjs-2';
 import 'chart.js/auto';
 
 const Overview = ({ setSelectedItem }) => {
-  const macros = [
-    { efficiency: 'High', errors: 1 },
-    { efficiency: 'Low', errors: 5 },
-    { efficiency: 'High', errors: 0 },
-    { efficiency: 'Low', errors: 4 },
-    { efficiency: 'High', errors: 1 },
-    { efficiency: 'Low', errors: 3 },
-    { efficiency: 'High', errors: 2 },
-    { efficiency: 'Low', errors: 5 },
-  ];
+  const [macros, setMacros] = useState([]);
 
+  // Fetch macros data from the Flask backend
+  useEffect(() => {
+    const fetchMacros = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/macros'); // Update with your Flask server URL
+        const data = await response.json();
+        console.log(data)
+        setMacros(data);
+      } catch (error) {
+        console.error('Error fetching macros:', error);
+      }
+    };
+
+    fetchMacros();
+  }, []);
+
+  // Calculate the metrics
   const totalMacros = macros.length;
-  const inefficientMacros = macros.filter(macro => macro.efficiency === 'Low').length;
-  const optimizedMacros = macros.filter(macro => macro.efficiency === 'High').length;
+  const inefficientMacros = macros.filter(macro => !macro.efficient).length;
+  const optimizedMacros = macros.filter(macro => macro.efficient).length;
 
   const doughnutData = {
     labels: ['Inefficient Macros', 'Optimized Macros'],
@@ -33,15 +41,9 @@ const Overview = ({ setSelectedItem }) => {
     datasets: [
       {
         label: 'Efficiency Rate',
-        data: macros.map(macro => macro.efficiency === 'High' ? 1 : 0),
+        data: macros.map(macro => macro.efficient ? 1 : 0),
         fill: false,
         borderColor: '#36a2eb'
-      },
-      {
-        label: 'Error Rate',
-        data: macros.map(macro => macro.errors),
-        fill: false,
-        borderColor: '#ff6384'
       }
     ]
   };

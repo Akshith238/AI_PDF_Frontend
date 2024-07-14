@@ -8,6 +8,7 @@ import Settings from './Settings';
 import Inspect from './Inspect';
 import Report from './Report';
 import Explore from './Explore';
+import Document from './Document';
 
 const drawerWidth = 240;
 
@@ -21,9 +22,11 @@ const Dashboard = () => {
       case 'Settings':
         return <Settings />;
       case 'Explore':
-        return <Explore />
+        return <Explore setSelectedItem={setSelectedItem} setActiveReportId={setActiveReportId}/>
+      case 'Document':
+        return <Document setSelectedItem={setSelectedItem} activeReportId={activeReportId}/>
       case 'Inspect':
-        return <Inspect />
+        return <Inspect setSelectedItem={setSelectedItem} setActiveReportId={setActiveReportId}/>
       case 'Report':
         return <Report id={activeReportId} />
       default:
